@@ -2,7 +2,7 @@
 zip2chd() {
   CWD="$(pwd)"
 
-  # Kolla att minst en ZIP-fil finns
+  # Check that at least one ZIP file exists 
   shopt -s nullglob nocaseglob
   ZIPFILES=(*.zip)
   if [ ${#ZIPFILES[@]} -eq 0 ]; then
@@ -10,7 +10,7 @@ zip2chd() {
     return 1
   fi
 
-  # Kontrollera att chdman finns
+  # Check that chdman exists 
   if command -v chdman >/dev/null 2>&1; then
     CHDMAN="chdman"
   elif [ -x /usr/bin/mame/chdman ]; then
@@ -20,14 +20,14 @@ zip2chd() {
     return 1
   fi
 
-  # Loop genom ZIP-filer
+  # Loop through ZIP files 
   for ZIP in "${ZIPFILES[@]}"; do
     echo "Processing: $ZIP"
 
     TMPDIR="$(mktemp -d /tmp/zip2chd.XXXXXX)" || { echo "mktemp failed"; return 1; }
     trap 'rm -rf "$TMPDIR"' EXIT INT TERM
 
-    # Packa upp
+    # Unpack 
     if command -v bsdtar >/dev/null 2>&1; then
       bsdtar -xf "$ZIP" -C "$TMPDIR" || { echo "Failed to extract $ZIP"; rm -rf "$TMPDIR"; continue; }
     elif command -v unzip >/dev/null 2>&1; then
@@ -38,7 +38,7 @@ zip2chd() {
       return 1
     fi
 
-    # Hitta .cue
+    # Find .cue
     CUEFILE="$(find "$TMPDIR" -type f -iname '*.cue' | head -n 1)"
     if [ -z "$CUEFILE" ]; then
       echo "No .cue found in $ZIP"
