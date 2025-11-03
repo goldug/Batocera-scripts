@@ -1,13 +1,13 @@
-# zip2dvd: download ZIP → extract temp → find .iso → create .chd in $PWD → cleanup
-zip2dvd() {
+# url2dvd: download ZIP → extract temp → find .iso → create .chd in $PWD → cleanup
+url2dvd() {
   if [ $# -lt 1 ]; then
-    echo "Usage: zip2dvd <zip-url>"
+    echo "Usage: url2dvd <zip-url>"
     return 2
   fi
 
   URL="$1"
   CWD="$(pwd)"
-  TMPDIR="$(mktemp -d "$CWD/zip2dvd.XXXXXX")" || { echo "mktemp failed"; return 1; }
+  TMPDIR="$(mktemp -d "$CWD/url2dvd.XXXXXX")" || { echo "mktemp failed"; return 1; }
 
   cleanup() { rm -rf "$TMPDIR"; }
   trap cleanup EXIT INT TERM
