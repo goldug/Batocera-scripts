@@ -12,7 +12,7 @@ url2chd() {
   cleanup() { rm -rf "$TMPDIR"; }
   trap cleanup EXIT INT TERM
 
-  # Välj hämtare
+  # Choose downloader
   if command -v wget >/dev/null 2>&1; then
     DL="wget -qO- \"$URL\""
   elif command -v curl >/dev/null 2>&1; then
@@ -22,7 +22,7 @@ url2chd() {
     return 1
   fi
 
-  # Packa upp
+  # Unpack
   if command -v bsdtar >/dev/null 2>&1; then
     EXTRACT="bsdtar -xvf- -C \"$TMPDIR\""
     sh -c "$DL" | sh -c "$EXTRACT" || { echo "Extract failed"; return 1; }
@@ -35,7 +35,7 @@ url2chd() {
     return 1
   fi
 
-  # Hitta .cue
+  # Find .cue
   CUEFILE="$(find "$TMPDIR" -type f -iname '*.cue' | head -n 1)"
   if [ -z "$CUEFILE" ]; then
     echo "No .cue found in archive."
@@ -59,6 +59,6 @@ url2chd() {
   "$CHDMAN" createcd -i "$CUEFILE" -o "$OUTPATH" || { echo "chdman failed"; return 1; }
   echo "Done: $OUTPATH"
 
-  # Rensa temporära filer även om trap inte triggas
+  # Clear temporary files even if trap doesn't trigger
   rm -rf "$TMPDIR"
 }
