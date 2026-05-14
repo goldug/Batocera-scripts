@@ -1,0 +1,29 @@
+## Changelog
+
+### v3 - Unified ScummVM ini handling
+
+#### Changed
+
+* `auto`, `standalone`, and `libretro` modes now write detected games to both ScummVM configuration files:
+
+  * `/userdata/system/configs/scummvm/scummvm.ini`
+  * `/userdata/bios/scummvm.ini`
+
+#### Why
+
+Batocera stores standalone ScummVM and libretro ScummVM configurations in different locations, but the actual game data written by the script is identical in both cases.
+
+Previously, users had to manually choose between:
+
+* `auto|standalone`
+* `libretro`
+
+depending on which emulator/core they planned to use.
+
+This change simplifies usage by automatically keeping both configuration files synchronized, removing the need to care about backend-specific config locations.
+
+#### Notes
+
+* `random` and `ma-random` modes still use temporary isolated ini files exactly as before.
+* Existing behavior for `.scummvm` launcher file generation is unchanged.
+* This is mainly a usability/quality-of-life improvement with no intended functional regressions.
